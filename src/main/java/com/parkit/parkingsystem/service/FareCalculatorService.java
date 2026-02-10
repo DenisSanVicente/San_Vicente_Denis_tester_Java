@@ -17,6 +17,12 @@ public class FareCalculatorService {
         long durationMillis = outMillis - inMillis;
         long durationHours = durationMillis / (60 * 60 * 1000);
 
+        // Implémentation des 30mn grauites //
+        if (durationMillis < 30 * 60 * 1000) {
+            ticket.setPrice(0);
+            return;
+        }
+
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
                 ticket.setPrice(durationHours * Fare.CAR_RATE_PER_HOUR);

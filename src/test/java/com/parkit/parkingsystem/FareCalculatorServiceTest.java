@@ -153,4 +153,53 @@ public class FareCalculatorServiceTest {
         assertEquals((0.5 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice(), ticket.getInTime().getTime());
     }
 
+    /** ===== ETAPE 4 ===== **/
+    @Test
+    public void calculateFareCarWithDiscount() {
+        Date inTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setDiscount(true);
+
+        // Calcul du prix total avant réduction
+        fareCalculatorService.calculateFare(ticket);
+
+        // Calcul du prix avec 5%
+        long durationHours = 1;
+        double fullPrice = 1 * Fare.CAR_RATE_PER_HOUR;
+        double expectedPrice = fullPrice * 0.95;
+
+        // Vérification
+        assertEquals(expectedPrice, ticket.getPrice(), 0.01);
+    }
+
+    @Test
+    public void calculateFareBikeWithDiscount() {
+        Date inTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setDiscount(true);
+
+        // Calcul du prix avant réduction
+        fareCalculatorService.calculateFare(ticket);
+
+        // Calcul des 5%
+        long durationHours = 1;
+        double fullPrice = 1 * Fare.BIKE_RATE_PER_HOUR;
+        double expectedPrice = fullPrice * 0.95;
+
+        // Vérification
+        assertEquals(expectedPrice, ticket.getPrice(), 0.01);
+    }
+
 }
