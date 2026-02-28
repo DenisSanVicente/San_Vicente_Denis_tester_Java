@@ -14,26 +14,22 @@ public class FareCalculatorService {
         long outMillis = ticket.getOutTime().getTime();
 
         //TODO: Some tests are failing here. Need to check if this logic is correct
-        long durationMillis = outMillis - inMillis;
 
+        float durationMillis = (float) (outMillis - inMillis) / 3600000;
 
         // Calcul de la durée en heures avec double pour précision
-        double durationHours = durationMillis / (1000.0 * 60 * 60);
-        double price;
 
         // Implémentation des 30mn gratuites
-        if (durationMillis <= (30 * 60 * 1000)) {
+        if (durationMillis < 0.5) {
             ticket.setPrice(0.0);
         } else {
             switch (ticket.getParkingSpot().getParkingType()) {
                 case CAR: {
-                    price = durationHours * Fare.CAR_RATE_PER_HOUR;
-                    ticket.setPrice(price);
+                    ticket.setPrice(durationMillis * Fare.CAR_RATE_PER_HOUR);
                     break;
                 }
                 case BIKE: {
-                    price = durationHours * Fare.BIKE_RATE_PER_HOUR;
-                    ticket.setPrice(price);
+                    ticket.setPrice(durationMillis * Fare.BIKE_RATE_PER_HOUR);
                     break;
                 }
                 default:
@@ -41,21 +37,9 @@ public class FareCalculatorService {
             }
         }
 
-        if (discount) {
-            switch (ticket.getParkingSpot().getParkingType()) {
-                case CAR: {
-                    price = durationHours * (Fare.CAR_RATE_PER_HOUR * 0.95);
-                            ticket.setPrice(price);
-                            break;
-                }
-                case BIKE: {
-                    price = durationHours * (Fare.BIKE_RATE_PER_HOUR * 0.95);
-                    ticket.setPrice(price);
-                    break;
-                }
-                default:
-                    throw new IllegalArgumentException("Unknow Parking Type");
-            }
+
+        if (ticket.getDiscount() && discount) {
+            ticket.setPrice(ticket.getPrice() * 0.95); // Remplacer 0.95 par fare.disount
         }
     }
 
