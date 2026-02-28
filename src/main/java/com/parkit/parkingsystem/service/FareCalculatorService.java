@@ -38,11 +38,15 @@ public class FareCalculatorService {
         }
 
 
+<<<<<<< HEAD
         if (ticket.getDiscount() && discount) {
             ticket.setPrice(ticket.getPrice() * 0.95); // Remplacer 0.95 par fare.disount
+=======
+        if (ticket.getDiscount()) {
+            ticket.setPrice(ticket.getPrice() * Fare.FARE_DISCOUNT); // Remplacer 0.95 par fare.discount
+>>>>>>> bf22d2f87178ff8321cf5526bd51cc5b07ea2a81
         }
     }
-
 
 
     public void calculateFare(Ticket ticket) {
