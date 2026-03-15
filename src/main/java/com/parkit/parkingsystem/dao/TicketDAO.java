@@ -36,8 +36,8 @@ public class TicketDAO {
             logger.error("Error fetching next available slot", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
-            return false;
         }
+        return false;
     }
 
     public Ticket getTicket(String vehicleRegNumber) {
@@ -65,8 +65,8 @@ public class TicketDAO {
             logger.error("Error fetching next available slot", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
-            return ticket;
         }
+        return ticket;
     }
 
     public boolean updateTicket(Ticket ticket) {
@@ -92,23 +92,23 @@ public class TicketDAO {
 
         int nbTicket = 0;
         Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement ps = null;
 
         try {
             con = dataBaseConfig.getConnection();
-            ps = con.prepareStatement(DBConstants.GET_NB_TICKET_BY_VEHICULE);
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NB_TICKET_BY_VEHICULE);
             ps.setString(1, vehiculeRegNumber);
-            rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
+            rs.next();
 
-            if (rs.next()) {
-                nbTicket = rs.getInt(1);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
+            nbTicket = rs.getInt(1);
+
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
+
+        } catch (Exception ex) {
+            logger.error("Erreur getNbTicket", ex);
+        } finally {
+
             dataBaseConfig.closeConnection(con);
         }
         return nbTicket;

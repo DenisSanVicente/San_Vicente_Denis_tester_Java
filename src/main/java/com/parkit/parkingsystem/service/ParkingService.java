@@ -33,9 +33,7 @@ public class ParkingService {
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
 
-                int nbTicket = ticketDAO.getNbTicket(vehicleRegNumber);
-
-                if (nbTicket > 0) {
+                if (ticketDAO.getNbTicket(vehicleRegNumber) > 1) {
                     System.out.println("Heureux de vous revoir ! En tant qu’utilisateur régulier de notre parking, vous allez obtenir une remise de 5%.");
                 }
 
