@@ -9,23 +9,26 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Currency;
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+
 public class FareCalculatorServiceTest {
+
+
 
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
 
     @BeforeAll
-    private static void setUp() {
+    public static void setUp() {
         fareCalculatorService = new FareCalculatorService();
     }
 
     @BeforeEach
-    private void setUpPerTest() {
+    public void setUpPerTest() {
         ticket = new Ticket();
     }
 

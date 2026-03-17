@@ -51,7 +51,7 @@ public class ParkingServiceTest {
             throw  new RuntimeException("Failed to set up test mock objects");
         }
     }
-
+    
     @Test
     public void processExitingVehicleTest(){
         parkingService.processExitingVehicle();
