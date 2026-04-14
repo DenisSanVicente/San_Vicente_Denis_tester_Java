@@ -75,15 +75,15 @@ public class ParkingService {
             }else{
 <span class="fc" id="L76">                throw new Exception(&quot;Error fetching parking number from DB. Parking slots might be full&quot;);</span>
             }
-<span class="nc" id="L78">        }catch(IllegalArgumentException ie){</span>
-<span class="nc" id="L79">            logger.error(&quot;Error parsing user input for type of vehicle&quot;, ie);</span>
+<span class="fc" id="L78">        }catch(IllegalArgumentException ie){</span>
+<span class="fc" id="L79">            logger.error(&quot;Error parsing user input for type of vehicle&quot;, ie);</span>
 <span class="fc" id="L80">        }catch(Exception e){</span>
 <span class="fc" id="L81">            logger.error(&quot;Error fetching next available parking slot&quot;, e);</span>
-<span class="pc" id="L82">        }</span>
+<span class="fc" id="L82">        }</span>
 <span class="fc" id="L83">        return parkingSpot;</span>
     }
 
-    private ParkingType getVehichleType(){
+    public ParkingType getVehichleType(){
 <span class="fc" id="L87">        System.out.println(&quot;Please select vehicle type from menu&quot;);</span>
 <span class="fc" id="L88">        System.out.println(&quot;1 CAR&quot;);</span>
 <span class="fc" id="L89">        System.out.println(&quot;2 BIKE&quot;);</span>

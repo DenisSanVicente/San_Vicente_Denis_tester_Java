@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 import java.util.Date;
 
 import static junit.framework.Assert.assertNull;
@@ -88,11 +87,10 @@ public class ParkingServiceTest {
     public void testProcessIncomingVehicle() throws Exception {
 
         /// GIVEN
-        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF"); // On mocke la la lecture de la lecture de la plaque
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(1); // On mocke le readSelection
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true); // On passe le booleéen à true car la place doit être libre
 
-        when(ticketDAO.getNbTicket(anyString())).thenReturn(0); // On crée un ticket qui n'existe pas encore
         when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(parkingSpot.getId()); // On récupère le numéro de la place de parking
         when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true); // On passe le booléen à true car la place n'est pas encore occupée
         when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
@@ -102,10 +100,11 @@ public class ParkingServiceTest {
         parkingService.processIncomingVehicle();
 
         /// THEN
+        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+        verify(ticketDAO, Mockito.times(1)).saveTicket(any(Ticket.class));
         verify(ticketDAO, Mockito.times(1)).getNbTicket(any(String.class));
-        verify(ticketDAO, Mockito.times(1)).saveTicket(any(Ticket.class)); // On enregistre le ticket
-        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class)); // On met à jour le ticket
     }
+
 
     @Test
     public void testGetNextParkingNumberIfAvailableParkingNumberNotFound() {
@@ -122,15 +121,14 @@ public class ParkingServiceTest {
 
     @Test
     public void testGetNextParkingNumberIfAvailableParkingNumberWrongArgument() {
-        /// GIVEN
-        when(inputReaderUtil.readSelection()).thenReturn(3); // On simule une mauvaise saisie de l'utilisateur => Erreur
 
-        /// WHEN
-        ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable(); // Appel de la méthode
+        ParkingService parkingServiceSpy = spy(parkingService);
+        doThrow(new IllegalArgumentException("Unsupported option. Please enter a number corresponding to the provided menu"))
+                .when(parkingServiceSpy).getVehichleType();
 
-        /// THEN
-        assertNull(parkingSpot); // Doit renvoyer null
+        ParkingSpot parkingSpot = parkingServiceSpy.getNextParkingNumberIfAvailable();
 
+        assertNull(parkingSpot);
     }
 }
 
