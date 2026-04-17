@@ -10,26 +10,23 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
         }
 
-        long inMillis = ticket.getInTime().getTime();
-        long outMillis = ticket.getOutTime().getTime();
+        long inHour = ticket.getInTime().getTime(); // On convertit le int inHour en long inHour et on ajout .getTime()
+        long outHour = ticket.getOutTime().getTime(); // Idem
 
         //TODO: Some tests are failing here. Need to check if this logic is correct
+        float duration = (float) (outHour - inHour) / 3600000;
 
-        float durationMillis = (float) (outMillis - inMillis) / 3600000;
-
-        // Calcul de la durée en heures avec double pour précision
-
-        // Implémentation des 30mn gratuites
-        if (durationMillis < 0.5) {
+        // Implementation des 30mn gratuites
+        if (duration < 0.5) {
             ticket.setPrice(0.0);
         } else {
             switch (ticket.getParkingSpot().getParkingType()) {
                 case CAR: {
-                    ticket.setPrice(durationMillis * Fare.CAR_RATE_PER_HOUR);
+                    ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
                     break;
                 }
                 case BIKE: {
-                    ticket.setPrice(durationMillis * Fare.BIKE_RATE_PER_HOUR);
+                    ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
                     break;
                 }
                 default:
@@ -37,13 +34,14 @@ public class FareCalculatorService {
             }
         }
 
-
         if (ticket.getDiscount()) {
-            ticket.setPrice(ticket.getPrice() * Fare.FARE_DISCOUNT); // Remplacer 0.95 par fare.discount
+            ticket.setPrice(ticket.getPrice() * Fare.DISCOUNT);
         }
+
     }
 
     public void calculateFare(Ticket ticket) {
         calculateFare(ticket, false);
     }
+
 }

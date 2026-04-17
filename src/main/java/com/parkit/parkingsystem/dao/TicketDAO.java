@@ -19,6 +19,34 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    // Ajout de la méthode getNbTicket
+    public int getNbTicket(String vehicleRegNumber) {
+        Connection con = null;
+        int nbTicket = 0;
+
+        try {
+            con = dataBaseConfig.getConnection(); // Connection à la BDD
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NB_TICKET); // Requête pour la BDD
+            ps.setString(1, vehicleRegNumber); //
+            ResultSet rs = ps.executeQuery(); // On exécute la requête avec ResultSet
+            rs.next(); // Lecture de la prochaine ligne de données
+
+            nbTicket = rs.getInt(1);
+
+            dataBaseConfig.closeResultSet(rs); // Fermeture de ResultSet
+            dataBaseConfig.closePreparedStatement(ps); // Fermeture de PreparedStatment
+
+        } catch (Exception exception) {
+            logger.error("Erreur de communication avec la BDD" + exception);
+
+        } finally {
+            dataBaseConfig.closeConnection(con);
+        }
+
+        return nbTicket;
+    }
+
+
     public boolean saveTicket(Ticket ticket) {
         Connection con = null;
         try {
@@ -36,8 +64,8 @@ public class TicketDAO {
             logger.error("Error fetching next available slot", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
+            return false;
         }
-        return false;
     }
 
     public Ticket getTicket(String vehicleRegNumber) {
@@ -65,8 +93,8 @@ public class TicketDAO {
             logger.error("Error fetching next available slot", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
+            return ticket;
         }
-        return ticket;
     }
 
     public boolean updateTicket(Ticket ticket) {
@@ -87,30 +115,4 @@ public class TicketDAO {
         return false;
     }
 
-
-    public int getNbTicket(String vehiculeRegNumber) {
-
-        int nbTicket = 0;
-        Connection con = null;
-
-        try {
-            con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NB_TICKET_BY_VEHICULE);
-            ps.setString(1, vehiculeRegNumber);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-
-            nbTicket = rs.getInt(1);
-
-            dataBaseConfig.closeResultSet(rs);
-            dataBaseConfig.closePreparedStatement(ps);
-
-        } catch (Exception ex) {
-            logger.error("Erreur getNbTicket", ex);
-        } finally {
-
-            dataBaseConfig.closeConnection(con);
-        }
-        return nbTicket;
-    }
 }

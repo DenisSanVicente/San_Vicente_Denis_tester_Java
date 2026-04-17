@@ -11,9 +11,10 @@ public class Ticket {
     private Date inTime;
     private Date outTime;
 
-    /* ===== MISE EN PLACE DE LA REDUCTION =====*/
+    // Création de l'attribut discount
     private boolean discount;
 
+    // GETTER ET SETTER du booléen
     public boolean getDiscount() {
         return discount;
     }
@@ -69,4 +70,5 @@ public class Ticket {
     public void setOutTime(Date outTime) {
         this.outTime = outTime;
     }
+
 }
