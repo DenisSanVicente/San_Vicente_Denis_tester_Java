@@ -61,13 +61,22 @@ public class ParkingDataBaseIT {
     @Test
     public void testParkingACar(){
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
+        // Appel de la méthode processIncomingVehicle
         parkingService.processIncomingVehicle();
 
+        // Création du ticket
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
+
+        // Vérification que le ticket existe réellement
         assertThat(ticket).isNotNull();
 
         ParkingSpot parkingSpot = ticket.getParkingSpot();
+
+        // Vérification que le parkingSpot a bien été crée
         assertThat(parkingSpot).isNotNull();
+
+        // Vérification que la place de parking n'est plus libre
         assertThat(parkingSpot.isAvailable()).isFalse();
     }
 
@@ -78,19 +87,20 @@ public class ParkingDataBaseIT {
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 
-        // Simulating an exit one hour after parking
+        // Simuler la sortie après 1h de parking
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
         ticket.setInTime(new Date(System.currentTimeMillis() - 3600000));
 
-        // Manually updating the ticket entry in the database to simulate a previous entry time
+        // MaJ du ticket dans la BDD pour simuler une entrée
         Connection con = null;
         try {
             con = dataBaseTestConfig.getConnection();
             PreparedStatement ps = con.prepareStatement("UPDATE ticket SET IN_TIME=? WHERE VEHICLE_REG_NUMBER=?");
-            ps.setTimestamp(1, new Timestamp(ticket.getInTime().getTime()));
-            ps.setString(2, "ABCDEF");
+            ps.setTimestamp(1, new Timestamp(ticket.getInTime().getTime())); // Paramètre 1  SET_IN_TIME
+            ps.setString(2, "ABCDEF"); //Paramètre 2 VEHICLE_REG_NUMBER
             ps.executeUpdate();
             dataBaseTestConfig.closePreparedStatement(ps);
+
         }catch (Exception ex){
             fail("Error updating IN_TIME in database",ex);
         }finally {

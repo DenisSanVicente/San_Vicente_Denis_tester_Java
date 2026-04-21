@@ -114,10 +114,10 @@ public class ParkingService {
             // On vérifie si le véhicule est récurrent
             int nbTicket = ticketDAO.getNbTicket(vehicleRegNumber);
 
-            // Si le véhicule est récurrent, discount passe à true
+            // On applique le discount si le nombre de ticket est > 1
             boolean discount = nbTicket > 1;
 
-            // On modifie la méthode pour sélectionner celle avec le booléen
+            // Appel de la méthode avec booléen discount à true
             fareCalculatorService.calculateFare(ticket, true);
 
             if(ticketDAO.updateTicket(ticket)) {

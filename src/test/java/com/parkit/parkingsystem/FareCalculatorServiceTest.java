@@ -162,11 +162,13 @@ public class FareCalculatorServiceTest {
         assertEquals(0, ticket.getPrice());
     }
 
+
+    /// ETAPE 4 ///
     @Test
     public void calculateFareCarWithDiscount() {
         /// ARRANGE
         Date inTime = new Date();
-        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000)); // On simule 1h de parking
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -176,7 +178,7 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
 
         /// ACT
-        fareCalculatorService.calculateFare(ticket, true);
+        fareCalculatorService.calculateFare(ticket, true); // Appel de la méthode avec booléen discount à true
 
         /// ASSERT
         assertEquals((Fare.CAR_RATE_PER_HOUR * Fare.DISCOUNT), ticket.getPrice());

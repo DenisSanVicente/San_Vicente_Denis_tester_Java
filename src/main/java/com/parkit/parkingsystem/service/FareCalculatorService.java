@@ -34,6 +34,7 @@ public class FareCalculatorService {
             }
         }
 
+        // Implémentation de la remise de 5%
         if (ticket.getDiscount()) {
             ticket.setPrice(ticket.getPrice() * Fare.DISCOUNT);
         }
